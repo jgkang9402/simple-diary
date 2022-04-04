@@ -12,8 +12,8 @@ const DiaryEditor = () =>{ // 다이어리 에디터 컴포넌트 생성
   });
 
   const handleChangeState = (e)=>{
-    console.log(e.target.name);
-    console.log(e.target.value);
+    // console.log(e.target.name);
+    // console.log(e.target.value);
 
     setState({
       ...state,
