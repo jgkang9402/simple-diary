@@ -1,52 +1,74 @@
-import { useRef, useState } from "react"
+import { useRef, useState } from "react";
 
-const DiaryEditor = () =>{ // 다이어리 에디터 컴포넌트 생성
+const DiaryEditor = ({onCreate}) => {
+  // 다이어리 에디터 컴포넌트 생성
 
-  const authorInput =useRef();
-  const contentInput =useRef();
+  const authorInput = useRef();
+  const contentInput = useRef();
 
-  const [state,setState] = useState({
+  const [state, setState] = useState({
     author: "",
     content: "",
     emotion: 1,
   });
 
-  const handleChangeState = (e)=>{
+  const handleChangeState = (e) => {
     // console.log(e.target.name);
     // console.log(e.target.value);
 
     setState({
       ...state,
       [e.target.name]: e.target.value,
-    })
+    });
   };
-  const handleSubmit = ()=>{
+  const handleSubmit = () => {
     // console.log(state);
-    if(state.author.length < 1){
+    if (state.author.length < 1) {
       // alert("작성자는 최소 1글자 이상 입력해주세요.")
       authorInput.current.focus();
       return;
     }
-    if(state.content.length < 5){
+    if (state.content.length < 5) {
       // alert("일기 본문은 최소 5글자 이상 입력해주세요.")
       contentInput.current.focus();
       return;
     }
-    alert('저장 성공')
-  }
+    onCreate(state.author, state.content, state.emotion);
+    console.log(state);
+    alert("저장 성공");
+    setState({ //초기화
+      author:'',
+      content:'',
+      emotion:1,
+    })
+  };
 
   return (
     <div className="DiaryEditor">
       <h2>오늘의 일기</h2>
       <div>
-        <input ref={authorInput} name="author" value={state.author} onChange={handleChangeState} />
+        <input
+          ref={authorInput}
+          name="author"
+          value={state.author}
+          onChange={handleChangeState}
+        />
       </div>
       <div>
-        <textarea ref={contentInput} name="content" value={state.content} onChange={handleChangeState} />
+        <textarea
+          ref={contentInput}
+          name="content"
+          value={state.content}
+          onChange={handleChangeState}
+        />
       </div>
       <div>
-          <span>오늘의 감정점수 : </span>
-        <select name="emotion" value={state.emotion} onChange={handleChangeState}>
+        <span>오늘의 감정점수 : </span>
+        <select
+          name="emotion"
+          value={state.emotion}
+          onChange={handleChangeState}
+        >
           <option value={1}>1</option>
           <option value={2}>2</option>
           <option value={3}>3</option>
@@ -58,7 +80,7 @@ const DiaryEditor = () =>{ // 다이어리 에디터 컴포넌트 생성
         <button onClick={handleSubmit}>일기 저장하기</button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default DiaryEditor
+export default DiaryEditor;
