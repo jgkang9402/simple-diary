@@ -4,7 +4,7 @@ import { useState } from "react";
 const DiaryItem = ({
   onEdit,
   onRemove,
-  authur,
+  author,
   content,
   created_date,
   emotion,
@@ -43,7 +43,7 @@ const DiaryItem = ({
     <div className="DiaryItem">
       <div className="info">
         <span>
-          작성자 : {authur} | 감정점수 : {emotion}
+          작성자 : {author} | 감정점수 : {emotion}
         </span>
         <br />
         <span className="date">{new Date(created_date).toLocaleString()}</span>

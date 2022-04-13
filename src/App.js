@@ -14,7 +14,7 @@ const App = () => {
       "https://jsonplaceholder.typicode.com/comments"
     ).then((res) => res.json());
     // console.log((res));
-    const initData = res.slice(0,20).map((it)=>{
+    const initData = res.slice(0,20).map((it)=>{  // 20개데이터만 저장
       return {
         author : it.email,
         content : it.body,
@@ -22,7 +22,7 @@ const App = () => {
         created_date : new Date().getTime(), //현재시간 불러오고 밀리세컨즈로
         id : dataId.current++ // dataId.current에 +1
       }
-    }); // 20개데이터만 저장
+    });
     // console.log(initData);
 
     setData(initData);
