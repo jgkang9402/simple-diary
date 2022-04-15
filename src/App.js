@@ -1,8 +1,7 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import DiaryEditor from "./DiaryEditor";
 import DiaryList from "./DiaryList.js";
 import "./App.css";
-import { useMemo } from "react";
 
 // https://jsonplaceholder.typicode.com/comments
 
@@ -15,7 +14,6 @@ const App = () => {
       "https://jsonplaceholder.typicode.com/comments"
     ).then((res) => res.json());
 
-    // console.log((res));
     const initData = res.slice(0, 20).map((it) => {
       // 20개데이터만 저장
       return {
@@ -35,7 +33,7 @@ const App = () => {
     getData();
   }, []);
 
-  const onCreate = (author, content, emotion) => {
+  const onCreate = useCallback((author, content, emotion) => {
     const created_date = new Date().getTime();
     const newItem = {
       author,
@@ -45,8 +43,8 @@ const App = () => {
       id: dataId.current,
     };
     dataId.current += 1;
-    setData([newItem, ...data]); // 원래데이터(...data)에 새로운아이템(newIteam)추가
-  };
+    setData((data) => [newItem, ...data]); // 원래데이터(...data)에 새로운아이템(newIteam)추가
+  }, []);
 
   const onRemove = (targetId) => {
     const newDiarylist = data.filter((it) => it.id !== targetId);
@@ -63,12 +61,11 @@ const App = () => {
   };
 
   const getDiaryAnalysis = useMemo(() => {
-
     const goodCount = data.filter((it) => it.emotion >= 3).length; // 감정점수3이상인데이터만 담아서 배열로새로만든뒤 길이를잰다
     const badCount = data.length - goodCount;
     const goodRatio = (goodCount / data.length) * 100;
     return { goodCount, badCount, goodRatio };
-  },[data.length]); // useMemo함수의 두번째 값에들어온 [data.length]는 그값이 변할때만 함수가 실행되게함(연산최적화)
+  }, [data.length]); // useMemo함수의 두번째 값에들어온 [data.length]는 그값이 변할때만 함수가 실행되게함(연산최적화)
 
   const { goodCount, badCount, goodRatio } = getDiaryAnalysis;
 
