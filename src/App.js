@@ -49,9 +49,7 @@ const App = () => {
   };
 
   const onRemove = (targetId) => {
-    console.log(`${targetId}가 삭제되었습니다`);
     const newDiarylist = data.filter((it) => it.id !== targetId);
-    console.log(newDiarylist);
     setData(newDiarylist);
   };
 
@@ -65,7 +63,6 @@ const App = () => {
   };
 
   const getDiaryAnalysis = useMemo(() => {
-    console.log("일기 분석 시작");
 
     const goodCount = data.filter((it) => it.emotion >= 3).length; // 감정점수3이상인데이터만 담아서 배열로새로만든뒤 길이를잰다
     const badCount = data.length - goodCount;
