@@ -1,15 +1,19 @@
-import { useRef } from "react";
-import { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const DiaryItem = ({
   onEdit,
   onRemove,
+  id,
   author,
   content,
-  created_date,
   emotion,
-  id,
+  created_date,
 }) => {
+
+  useEffect(()=>{
+    console.log(`${id}번 째 아이템 렌더`);
+  })
+  
   const [isEdit, setIsEdit] = useState(false);
   const toggleIsEdit = () => setIsEdit(!isEdit); // toggleIsEdit함수가호출되면 isEdit의 값을 반대로(true)
 
@@ -33,7 +37,7 @@ const DiaryItem = ({
       return;
     }
 
-    if (window.confirm(`${id}번째 일기를 수정하시겠습니까?`)){
+    if (window.confirm(`${id}번째 일기를 수정하시겠습니까?`)) {
       onEdit(id, localContent);
       toggleIsEdit();
     }
@@ -77,4 +81,4 @@ const DiaryItem = ({
   );
 };
 
-export default DiaryItem;
+export default React.memo(DiaryItem);

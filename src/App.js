@@ -46,19 +46,18 @@ const App = () => {
     setData((data) => [newItem, ...data]); // 원래데이터(...data)에 새로운아이템(newIteam)추가
   }, []);
 
-  const onRemove = (targetId) => {
-    const newDiarylist = data.filter((it) => it.id !== targetId);
-    setData(newDiarylist);
-  };
+  const onRemove = useCallback((targetId) => {
+    setData(data => data.filter((it) => it.id !== targetId));
+  }, []);
 
-  const onEdit = (targetId, newContent) => {
-    setData(
+  const onEdit = useCallback((targetId, newContent) => {
+    setData((data) =>
       data.map(
         (it) => (it.id === targetId ? { ...it, content: newContent } : it)
         // true일떄 원본데이터 ...it를 불러온후 contenet를 newContent로 업데이트, false일땐 it을 반환
       )
     );
-  };
+  }, []);
 
   const getDiaryAnalysis = useMemo(() => {
     const goodCount = data.filter((it) => it.emotion >= 3).length; // 감정점수3이상인데이터만 담아서 배열로새로만든뒤 길이를잰다
