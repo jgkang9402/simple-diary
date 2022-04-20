@@ -1,4 +1,10 @@
-import { useRef, useEffect, useCallback, useMemo, useReducer } from "react";
+import React, {
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+  useReducer,
+} from "react";
 import DiaryEditor from "./DiaryEditor";
 import DiaryList from "./DiaryList.js";
 import "./App.css";
@@ -23,8 +29,7 @@ const reducer = (state, action) => {
     }
     case "EDIT": {
       return state.map((it) =>
-        it.id === action.targetId ?
-        { ...it, content: action.newContent } : it
+        it.id === action.targetId ? { ...it, content: action.newContent } : it
       );
     }
     default:
@@ -32,8 +37,11 @@ const reducer = (state, action) => {
   }
 };
 
-const App = () => {
+export const DiaryStateContext = React.createContext();
+// export default(파일한개만쓸수있음)가아닌 export만 쓰는 이유는 파일을 여러개 쓰기위해서임
+export const DiaryDispatchContext = React.createContext();
 
+const App = () => {
   const [data, dispatch] = useReducer(reducer, []);
 
   const dataId = useRef(0);
@@ -53,7 +61,6 @@ const App = () => {
         id: dataId.current++, // dataId.current에 +1
       };
     });
-    // console.log(initData);
 
     dispatch({ type: "INIT", data: initData });
   };
@@ -78,6 +85,10 @@ const App = () => {
     dispatch({ type: "EDIT", targetId, newContent });
   }, []);
 
+  const memoizedDispatches = useMemo(() => {
+    return { onCreate, onRemove, onEdit };
+  }, []);
+
   const getDiaryAnalysis = useMemo(() => {
     const goodCount = data.filter((it) => it.emotion >= 3).length; // 감정점수3이상인데이터만 담아서 배열로새로만든뒤 길이를잰다
     const badCount = data.length - goodCount;
@@ -88,14 +99,18 @@ const App = () => {
   const { goodCount, badCount, goodRatio } = getDiaryAnalysis;
 
   return (
-    <div className="App">
-      <DiaryEditor onCreate={onCreate} />
-      <div>전체 일기 : {data.length}</div>
-      <div>기분 좋은 일기 개수 : {goodCount}</div>
-      <div>기분 나쁜 일기 개수 : {badCount}</div>
-      <div>기분 좋은 일기 비율 : {goodRatio}</div>
-      <DiaryList onEdit={onEdit} onRemove={onRemove} diaryList={data} />
-    </div>
+    <DiaryStateContext.Provider value={data}>
+      <DiaryDispatchContext.Provider value={memoizedDispatches}>
+        <div className="App">
+          <DiaryEditor />
+          <div>전체 일기 : {data.length}</div>
+          <div>기분 좋은 일기 개수 : {goodCount}</div>
+          <div>기분 나쁜 일기 개수 : {badCount}</div>
+          <div>기분 좋은 일기 비율 : {goodRatio}</div>
+          <DiaryList />
+        </div>
+      </DiaryDispatchContext.Provider>
+    </DiaryStateContext.Provider>
   );
 };
 
